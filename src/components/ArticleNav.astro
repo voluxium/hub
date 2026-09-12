@@ -1,0 +1,34 @@
+---
+import type { Post } from '../utils/posts';
+import { postUrl } from '../utils/posts';
+
+interface Props {
+  prev?: Post;
+  next?: Post;
+}
+
+const { prev, next } = Astro.props;
+---
+
+{
+  (prev || next) && (
+    <nav class="article-nav">
+      {prev ? (
+        <a class="island nav-prev" href={postUrl(prev)}>
+          <div class="article-nav-label">上一篇</div>
+          <div class="article-nav-title">{prev.data.title}</div>
+        </a>
+      ) : (
+        <span />
+      )}
+      {next ? (
+        <a class="island nav-next" href={postUrl(next)}>
+          <div class="article-nav-label">下一篇</div>
+          <div class="article-nav-title">{next.data.title}</div>
+        </a>
+      ) : (
+        <span />
+      )}
+    </nav>
+  )
+}

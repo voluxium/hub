@@ -1,0 +1,43 @@
+/* ====== Article nav (prev/next) ====== */
+.article-nav {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  margin-top: 40px;
+  align-items: stretch;
+}
+
+.article-nav a,
+.article-nav > span {
+  min-height: 78px;
+}
+
+.article-nav a {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 16px 20px;
+}
+
+.article-nav-label {
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+.article-nav-title {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.article-nav a:hover .article-nav-title {
+  color: var(--accent);
+}
+
+.article-nav .nav-next {
+  text-align: right;
+}

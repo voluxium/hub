@@ -1,0 +1,25 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../../../layouts/BaseLayout.astro';
+import ArticleListSection from '../../../../components/ArticleListSection.astro';
+import { sortedPosts, CATEGORIES } from '../../../../utils/posts';
+
+const tag = CATEGORIES.chat;
+
+export async function getStaticPaths({ paginate }) {
+  const all = sortedPosts(await getCollection('posts'));
+  return paginate(all.filter((p) => p.data.tags.includes(CATEGORIES.chat)), { pageSize: 8 });
+}
+
+const { page } = Astro.props;
+---
+
+<BaseLayout title={`${tag} - voluxium的小站`}>
+  <ArticleListSection
+    posts={page.data}
+    page={page.currentPage}
+    totalPages={page.lastPage}
+    buildHref={(n) => (n === 1 ? '/posts/category/chat' : `/posts/category/chat/${n}`)}
+    heading={tag}
+  />
+</BaseLayout>

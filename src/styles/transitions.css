@@ -1,0 +1,55 @@
+/* ====== 页面切换：模块从下往上浮现 ====== */
+/* 关闭 View Transitions 默认交叉淡化，页面瞬时切换，入场交给下方模块动画 */
+::view-transition-old(root) {
+  animation: none;
+}
+
+::view-transition-new(root) {
+  animation: none;
+}
+
+@keyframes module-float-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 客户端导航后新 DOM 自动重播：banner → 左栏 → 正文 → 右栏 → 页脚，依次浮现 */
+.banner-outer,
+.left-rail,
+.main-col,
+.right-rail,
+.footer {
+  animation: module-float-in 0.45s ease both;
+}
+
+.left-rail {
+  animation-delay: 0.06s;
+}
+
+.main-col {
+  animation-delay: 0.12s;
+}
+
+.right-rail {
+  animation-delay: 0.18s;
+}
+
+.footer {
+  animation-delay: 0.24s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .banner-outer,
+  .left-rail,
+  .main-col,
+  .right-rail,
+  .footer {
+    animation: none;
+  }
+}

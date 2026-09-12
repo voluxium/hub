@@ -1,0 +1,52 @@
+/* ====== Theme tokens ====== */
+:root {
+  --bg: #f4f5f7;
+  --bg-grad-1: #e9ecf2;
+  --bg-grad-2: #f7f8fa;
+  --text: #1f2328;
+  --text-soft: #5b6470;
+  --muted: #8a93a0;
+  --card-bg: rgba(255, 255, 255, 0.55);
+  --card-border: rgba(255, 255, 255, 0.7);
+  --card-shadow: 0 6px 28px rgba(40, 50, 70, 0.08);
+  --island-bg: rgba(255, 255, 255, 0.62);
+  /* --island-border: rgba(0, 0, 0, 0.50); */
+  --accent: #3a6df0;
+  --accent-soft: rgba(58, 109, 240, 0.12);
+  --tag-bg: rgba(58, 109, 240, 0.1);
+  --tag-text: #2a4fb0;
+  --code-bg: #0d1117;
+  --code-text: #e6edf3;
+  --divider: rgba(0, 0, 0, 0.08);
+  --hover: rgba(0, 0, 0, 0.04);
+  --nav-h: 54px; /* 导航高度：banner 负边距的单一事实来源 */
+}
+
+[data-theme="dark"] {
+  --bg: #0f1318;
+  --bg-grad-1: #0a0d12;
+  --bg-grad-2: #161b22;
+  --text: #e6edf3;
+  --text-soft: #aeb6c2;
+  --muted: #7d868f;
+  --card-bg: rgba(22, 27, 34, 0.55);
+  --card-border: rgba(255, 255, 255, 0.06);
+  --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
+  --island-bg: rgba(22, 27, 34, 0.62);
+  /* --island-border: rgba(255, 255, 255, 0.50); */
+  --accent: #6ea0ff;
+  --accent-soft: rgba(110, 160, 255, 0.16);
+  --tag-bg: rgba(110, 160, 255, 0.16);
+  --tag-text: #9cc0ff;
+  --code-bg: #05080d;
+  --code-text: #e6edf3;
+  --divider: rgba(255, 255, 255, 0.1);
+  --hover: rgba(255, 255, 255, 0.05);
+}
+
+/* 窄屏导航更矮，同步更新导航高度令牌 */
+@media (max-width: 860px) {
+  :root {
+    --nav-h: 48px;
+  }
+}

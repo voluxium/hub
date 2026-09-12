@@ -1,0 +1,149 @@
+/* ====== Navigation ====== */
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 60;
+  max-width: 60%;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  height: var(--nav-h);
+  padding: 6px 16px;
+  background: var(--island-bg);
+  border-radius: 0 0 18px 18px;
+  box-shadow: var(--card-shadow);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.nav-home {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  color: var(--text);
+  transition: background 0.2s ease;
+}
+
+.nav-home:hover {
+  background: var(--hover);
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 auto;
+}
+
+.nav-item {
+  position: relative;
+}
+
+.nav-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 10px;
+  color: var(--text-soft);
+  font-size: 18px;
+  font-weight: bolder;
+  transition: background 0.2s ease, color 0.2s ease;
+  cursor: pointer;
+}
+
+.nav-link:hover,
+.nav-item:hover .nav-link {
+  background: var(--hover);
+  color: var(--text);
+}
+
+.nav-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  min-width: 160px;
+  padding: 10px;
+  margin-top: 10px;
+  background: var(--island-bg);
+  border: 1px solid var(--island-border);
+  border-radius: 12px;
+  box-shadow: var(--card-shadow);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.18s ease, visibility 0.18s ease;
+}
+
+/* 悬停桥梁：向上延伸 14px 的隐形热区，鼠标下移到下拉列表时不会丢失 hover */
+.nav-dropdown::before {
+  content: "";
+  position: absolute;
+  top: -14px;
+  left: 0;
+  right: 0;
+  height: 14px;
+}
+
+.nav-item:hover .nav-dropdown {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.nav-dropdown a {
+  display: block;
+  padding: 8px 12px;
+  border-radius: 8px;
+  color: var(--text-soft);
+  font-size: 16px;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.nav-dropdown a:hover {
+  background: var(--hover);
+  color: var(--text);
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ====== 窄屏：背景板跟随内容，条目压缩 ====== */
+@media (max-width: 860px) {
+  .nav {
+    width: fit-content;
+    max-width: 100%;
+    gap: 12px;
+    padding: 6px 12px;
+  }
+
+  .nav-links {
+    gap: 4px;
+  }
+
+  .nav-link {
+    font-size: 14px;
+    padding: 6px 10px;
+  }
+
+  .nav-link svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .nav-home {
+    width: 34px;
+    height: 34px;
+  }
+}

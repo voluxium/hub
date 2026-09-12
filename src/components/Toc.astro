@@ -1,0 +1,27 @@
+---
+import type { MarkdownHeading } from 'astro';
+
+interface Props {
+  headings: MarkdownHeading[];
+}
+
+const { headings } = Astro.props;
+const tocItems = headings.filter((h) => h.depth === 1 || h.depth === 2);
+---
+
+{
+  tocItems.length > 0 && (
+    <aside class="island toc">
+      <p class="toc-title">目录</p>
+      <ul>
+        {tocItems.map((h) => (
+          <li>
+            <a href={`#${h.slug}`} class={h.depth === 2 ? 'toc-h2' : ''}>
+              {h.text}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </aside>
+  )
+}

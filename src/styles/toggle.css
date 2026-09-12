@@ -1,0 +1,134 @@
+/* ====== Theme toggle ====== */
+.theme-toggle {
+  display: inline-flex;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--island-border);
+  background: var(--hover);
+}
+
+.theme-toggle button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 32px;
+  background: transparent;
+  border: none;
+  color: var(--text-soft);
+  cursor: pointer;
+  transition: background 0.18s ease, color 0.18s ease;
+}
+
+.theme-toggle button[aria-pressed="true"] {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.theme-toggle button:hover {
+  color: var(--text);
+}
+
+/* ====== 主题切换：窄屏下拉 ====== */
+.theme-dropdown {
+  display: none;
+  position: relative;
+}
+
+.theme-dropdown-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 36px;
+  padding: 0 9px;
+  border: 1px solid var(--island-border);
+  border-radius: 10px;
+  background: var(--hover);
+  color: var(--text-soft);
+  cursor: pointer;
+  transition: color 0.18s ease;
+}
+
+.theme-dropdown-trigger:hover {
+  color: var(--text);
+}
+
+.theme-dropdown-trigger .td-icon {
+  display: none;
+}
+
+.theme-dropdown-trigger .td-icon svg {
+  display: block;
+}
+
+.theme-dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 8px;
+  min-width: 118px;
+  padding: 6px;
+  background: var(--island-bg);
+  border: 1px solid var(--island-border);
+  border-radius: 12px;
+  box-shadow: var(--card-shadow);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.18s ease, visibility 0.18s ease;
+  z-index: 70;
+}
+
+/* 悬停桥梁：触发器与菜单间 8px 间隙的隐形热区 */
+.theme-dropdown::before {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  height: 8px;
+}
+
+.theme-dropdown:hover .theme-dropdown-menu,
+.theme-dropdown.open .theme-dropdown-menu {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.theme-dropdown-menu button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 8px 10px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text-soft);
+  font-size: 14px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.theme-dropdown-menu button:hover {
+  background: var(--hover);
+  color: var(--text);
+}
+
+.theme-dropdown-menu button[aria-pressed="true"] {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+/* 窄屏：三按钮 → 下拉；宽屏：恢复三按钮 */
+@media (max-width: 860px) {
+  .theme-toggle {
+    display: none;
+  }
+  .theme-dropdown {
+    display: block;
+  }
+}

@@ -1,0 +1,39 @@
+---
+import Layout from './Layout.astro';
+import Nav from '../components/Nav.astro';
+import Banner from '../components/Banner.astro';
+import ProfileCard from '../components/ProfileCard.astro';
+import CalendarWidget from '../components/CalendarWidget.astro';
+
+interface Props {
+  title?: string;
+  showProfile?: boolean;
+}
+
+const { title, showProfile = false } = Astro.props;
+---
+
+<Layout title={title}>
+  <Nav />
+  <div class="banner-outer">
+    <Banner />
+  </div>
+  <div class="page">
+    <div class={`layout-grid${showProfile ? '' : ' no-profile-narrow'}`}>
+      <div class="left-rail">
+        <ProfileCard />
+      </div>
+      <main class="main-col">
+        <slot />
+      </main>
+      <div class="right-rail">
+        <slot name="right-rail">
+          <CalendarWidget />
+        </slot>
+      </div>
+    </div>
+    <footer class="footer">
+      © {new Date().getFullYear()} 内容遵循 CC-BY-NC-SA 4.0 | github pages 部署
+    </footer>
+  </div>
+</Layout>

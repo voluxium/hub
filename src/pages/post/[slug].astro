@@ -1,0 +1,50 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { getCollection, render } from 'astro:content';
+import { sortedPosts, fmtDate, postSlug } from '../../utils/posts';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Toc from '../../components/Toc.astro';
+import ArticleNav from '../../components/ArticleNav.astro';
+import 'katex/dist/katex.min.css';
+
+export const getStaticPaths = (async () => {
+  const posts = sortedPosts(await getCollection('posts'));
+  return posts.map((post, i) => ({
+    params: { slug: postSlug(post) },
+    props: {
+      post,
+      prev: posts[i + 1],
+      next: posts[i - 1],
+    },
+  }));
+}) satisfies GetStaticPaths;
+
+const { post, prev, next } = Astro.props;
+const { Content, headings } = await render(post);
+---
+
+<BaseLayout title={`${post.data.title}`}>
+  <Toc slot="right-rail" headings={headings} />
+  <article class="island article-body">
+    <header class="article-header">
+      <h1>{post.data.title}</h1>
+      <div class="article-meta">
+        <span>{fmtDate(post.data.date)}</span>
+        <span aria-hidden="true">·</span>
+        {post.data.tags.map((t) => <span class="tag">{t}</span>)}
+      </div>
+    </header>
+    <hr class="article-divider" />
+    <div class="prose">
+      <Content />
+    </div>
+    <div class="license">
+      本文采用
+      <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener license">
+        CC-BY-NC-SA 4.0
+      </a>
+      协议发布
+    </div>
+  </article>
+  <ArticleNav prev={prev} next={next} />
+</BaseLayout>

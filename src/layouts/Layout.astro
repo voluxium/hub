@@ -1,0 +1,260 @@
+---
+import { ClientRouter } from 'astro:transitions';
+
+import '../styles/tokens.css';
+import '../styles/global.css';
+import '../styles/layout.css';
+import '../styles/transitions.css';
+import '../styles/nav.css';
+import '../styles/toggle.css'
+import '../styles/banner.css';
+import '../styles/profilecard.css';
+import '../styles/calendar.css'
+import '../styles/article-card.css';
+import '../styles/pagination.css';
+import '../styles/article.css';
+import '../styles/toc.css';
+import '../styles/article-nav.css';
+
+interface Props {
+  title?: string;
+}
+
+const { title = 'blog' } = Astro.props;
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/icon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    <script is:inline>
+      // 首屏前应用主题，避免闪烁
+      (function () {
+        try {
+          var pref = localStorage.getItem('theme') || 'system';
+          var actual = pref === 'system'
+            ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+            : pref;
+          document.documentElement.setAttribute('data-theme', actual);
+          document.documentElement.setAttribute('data-pref', pref);
+        } catch (e) {
+          document.documentElement.setAttribute('data-theme', 'light');
+        }
+      })();
+    </script>
+    <ClientRouter />
+  </head>
+  <body>
+    <slot />
+    <script is:inline>
+      // 全局交互脚本：主题切换 / 日历 / 目录
+      (function () {
+        var root = document.documentElement;
+        var monthNames = ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'];
+        function pad(n) { return n < 10 ? '0' + n : '' + n; }
+
+        /* ---------- 主题 ---------- */
+        function applyTheme(p) {
+          try { localStorage.setItem('theme', p); } catch (e) {}
+          var actual = p === 'system'
+            ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+            : p;
+          root.setAttribute('data-theme', actual);
+          root.setAttribute('data-pref', p);
+          var btns = document.querySelectorAll('#theme-toggle button, .theme-dropdown-menu button');
+          for (var i = 0; i < btns.length; i++) {
+            btns[i].setAttribute('aria-pressed', btns[i].getAttribute('data-mode') === p ? 'true' : 'false');
+          }
+          var trigs = document.querySelectorAll('.theme-dropdown-trigger');
+          for (var k = 0; k < trigs.length; k++) {
+            var ticons = trigs[k].querySelectorAll('.td-icon');
+            for (var j = 0; j < ticons.length; j++) {
+              ticons[j].style.display = ticons[j].getAttribute('data-icon-mode') === p ? 'inline' : 'none';
+            }
+          }
+        }
+        applyTheme(root.getAttribute('data-pref') || 'system');
+        try {
+          window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function () {
+            if ((root.getAttribute('data-pref') || 'system') === 'system') applyTheme('system');
+          });
+        } catch (e) {}
+
+        /* ---------- 日历 ---------- */
+        function renderCalendar(cal) {
+          var grid = cal.querySelector('[data-cal-grid]');
+          var title = cal.querySelector('[data-cal-title]');
+          var todayLabel = cal.querySelector('[data-cal-today]');
+          if (!grid) return;
+          var today = new Date();
+          if (!cal._view) cal._view = new Date(today.getFullYear(), today.getMonth(), 1);
+          if (!cal._selected) cal._selected = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+          var view = cal._view;
+          var selected = cal._selected;
+          if (title) title.textContent = view.getFullYear() + ' 年 ' + monthNames[view.getMonth()];
+
+          var first = new Date(view.getFullYear(), view.getMonth(), 1);
+          var startDay = first.getDay();
+          var daysInMonth = new Date(view.getFullYear(), view.getMonth() + 1, 0).getDate();
+          var daysInPrev = new Date(view.getFullYear(), view.getMonth(), 0).getDate();
+          var cells = [];
+          var pd, nd, i, day;
+          for (i = startDay - 1; i >= 0; i--) {
+            pd = new Date(view.getFullYear(), view.getMonth() - 1, daysInPrev - i);
+            cells.push({ y: pd.getFullYear(), m: pd.getMonth(), d: pd.getDate(), other: true });
+          }
+          for (day = 1; day <= daysInMonth; day++) {
+            cells.push({ y: view.getFullYear(), m: view.getMonth(), d: day, other: false });
+          }
+          while (cells.length % 7 !== 0) {
+            nd = new Date(view.getFullYear(), view.getMonth() + 1, cells.length - startDay - daysInMonth + 1);
+            cells.push({ y: nd.getFullYear(), m: nd.getMonth(), d: nd.getDate(), other: true });
+          }
+          var html = '';
+          for (var c = 0; c < cells.length; c++) {
+            var cell = cells[c];
+            var dateStr = cell.y + '-' + pad(cell.m + 1) + '-' + pad(cell.d);
+            var isToday = cell.y === today.getFullYear() && cell.m === today.getMonth() && cell.d === today.getDate();
+            var isSelected = cell.y === selected.getFullYear() && cell.m === selected.getMonth() && cell.d === selected.getDate();
+            var cls = (isToday ? 'today' : '') + (isSelected ? ' selected' : '') + (cell.other ? ' other-month' : '');
+            html += '<span class="' + cls.trim() + '" data-date="' + dateStr + '">' + cell.d + '</span>';
+          }
+          grid.innerHTML = html;
+          if (todayLabel) todayLabel.textContent = '今天：' + today.getFullYear() + '-' + pad(today.getMonth() + 1) + '-' + pad(today.getDate());
+          var anim = cal._dir === 'next' ? 'cal-anim-next' : cal._dir === 'prev' ? 'cal-anim-prev' : '';
+          cal._dir = null;
+          if (anim) {
+            grid.classList.remove('cal-anim-next', 'cal-anim-prev', 'cal-anim-fade');
+            if (title) title.classList.remove('cal-anim-next', 'cal-anim-prev', 'cal-anim-fade');
+            void grid.offsetWidth;
+            grid.classList.add(anim);
+            if (title) title.classList.add(anim);
+          }
+        }
+        function initCalendars() {
+          var cals = document.querySelectorAll('.calendar');
+          for (var i = 0; i < cals.length; i++) renderCalendar(cals[i]);
+        }
+
+        /* ---------- 目录 TOC ---------- */
+        function setActiveToc() {
+          var links = Array.prototype.slice.call(document.querySelectorAll('.toc a[href^="#"]'));
+          if (!links.length) return;
+          var targets = links.map(function (l) {
+            var id = decodeURIComponent(l.getAttribute('href').slice(1));
+            return { link: l, el: document.getElementById(id) };
+          }).filter(function (t) { return t.el; });
+          if (!targets.length) return;
+          var current = targets[0];
+          for (var i = 0; i < targets.length; i++) {
+            if (targets[i].el.getBoundingClientRect().top - 100 <= 0) current = targets[i];
+          }
+          for (var j = 0; j < links.length; j++) links[j].classList.remove('active');
+          current.link.classList.add('active');
+        }
+        if (!document.__tocScrollBound) {
+          document.__tocScrollBound = true;
+          window.addEventListener('scroll', setActiveToc, { passive: true });
+        }
+
+        /* ---------- 点击委托 ---------- */
+        document.addEventListener('click', function (e) {
+          // 点击在外部时，关闭已打开的主题下拉（窄屏）
+          var openDd = document.querySelector('.theme-dropdown.open');
+          if (openDd && !e.target.closest('.theme-dropdown')) {
+            openDd.classList.remove('open');
+            var ot = openDd.querySelector('.theme-dropdown-trigger');
+            if (ot) ot.setAttribute('aria-expanded', 'false');
+          }
+
+          // 主题
+          var tbtn = e.target.closest('#theme-toggle button');
+          if (tbtn) { applyTheme(tbtn.getAttribute('data-mode')); return; }
+
+          // 主题下拉（窄屏）
+          var ttrig = e.target.closest('.theme-dropdown-trigger');
+          if (ttrig) {
+            var tdd = ttrig.closest('.theme-dropdown');
+            var nowOpen = tdd.classList.toggle('open');
+            ttrig.setAttribute('aria-expanded', nowOpen ? 'true' : 'false');
+            return;
+          }
+          var titem = e.target.closest('.theme-dropdown-menu button[data-mode]');
+          if (titem) {
+            applyTheme(titem.getAttribute('data-mode'));
+            var tdd2 = titem.closest('.theme-dropdown');
+            tdd2.classList.remove('open');
+            var ttrig2 = tdd2.querySelector('.theme-dropdown-trigger');
+            if (ttrig2) ttrig2.setAttribute('aria-expanded', 'false');
+            return;
+          }
+
+          // 日历
+          var cal = e.target.closest('.calendar');
+          if (cal) {
+            var now = new Date();
+            if (e.target.closest('.cal-prev')) {
+              cal._view = new Date(cal._view.getFullYear(), cal._view.getMonth() - 1, 1);
+              cal._dir = 'prev';
+              renderCalendar(cal); return;
+            }
+            if (e.target.closest('.cal-next')) {
+              cal._view = new Date(cal._view.getFullYear(), cal._view.getMonth() + 1, 1);
+              cal._dir = 'next';
+              renderCalendar(cal); return;
+            }
+            var dayEl = e.target.closest('[data-date]');
+            if (dayEl) {
+              var parts = dayEl.getAttribute('data-date').split('-');
+              var dt = new Date(+parts[0], +parts[1] - 1, +parts[2]);
+              var oldView = cal._view;
+              cal._selected = dt;
+              cal._view = new Date(dt.getFullYear(), dt.getMonth(), 1);
+              if (cal._view.getTime() !== oldView.getTime()) cal._dir = cal._view > oldView ? 'next' : 'prev';
+              renderCalendar(cal); return;
+            }
+            if (e.target.closest('.cal-today-btn')) {
+              var oldView2 = cal._view;
+              cal._selected = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+              cal._view = new Date(now.getFullYear(), now.getMonth(), 1);
+              if (cal._view.getTime() !== oldView2.getTime()) cal._dir = cal._view > oldView2 ? 'next' : 'prev';
+              renderCalendar(cal); return;
+            }
+            return;
+          }
+
+          // 目录：点击定位（CSS scroll-margin-top）
+          var tocLink = e.target.closest('.toc a[href^="#"]');
+          if (tocLink) {
+            e.preventDefault();
+            var id = decodeURIComponent(tocLink.getAttribute('href').slice(1));
+            var el = document.getElementById(id);
+            if (el) {
+              el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              history.replaceState(null, '', '#' + id);
+            }
+            return;
+          }
+        });
+
+        /* ---------- 页面（重新）加载 ---------- */
+        function onContentLoaded() {
+          applyTheme(root.getAttribute('data-pref') || 'system');
+          initCalendars();
+          setActiveToc();
+        }
+        document.addEventListener('astro:page-load', onContentLoaded);
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', onContentLoaded);
+        } else {
+          onContentLoaded();
+        }
+      })();
+    </script>
+  </body>
+</html>

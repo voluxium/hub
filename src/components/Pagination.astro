@@ -1,0 +1,60 @@
+---
+interface Props {
+  page: number;
+  totalPages: number;
+  buildHref: (page: number) => string;
+}
+
+const { page, totalPages, buildHref } = Astro.props;
+
+function pageRange(current: number, total: number): (number | '…')[] {
+  const out: (number | '…')[] = [];
+  const push = (n: number | '…') => out.push(n);
+  if (total <= 7) {
+    for (let i = 1; i <= total; i++) push(i);
+    return out;
+  }
+  push(1);
+  if (current - 2 > 2) push('…');
+  for (let i = Math.max(2, current - 2); i <= Math.min(total - 1, current + 2); i++) push(i);
+  if (current + 2 < total - 1) push('…');
+  if (total > 1) push(total);
+  return out;
+}
+
+const items = pageRange(page, totalPages);
+---
+
+{
+  totalPages > 1 && (
+    <nav class="pagination">
+      <a
+        href={page === 1 ? undefined : buildHref(page - 1)}
+        class={page === 1 ? 'disabled' : ''}
+        aria-label="上一页"
+      >
+        &lt;
+      </a>
+      {items.map((it) =>
+        it === '…' ? (
+          <span>…</span>
+        ) : (
+          <a
+            href={buildHref(it)}
+            class={it === page ? 'current' : ''}
+            aria-current={it === page ? 'page' : undefined}
+          >
+            {it}
+          </a>
+        )
+      )}
+      <a
+        href={page === totalPages ? undefined : buildHref(page + 1)}
+        class={page === totalPages ? 'disabled' : ''}
+        aria-label="下一页"
+      >
+        &gt;
+      </a>
+    </nav>
+  )
+}

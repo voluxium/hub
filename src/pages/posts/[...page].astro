@@ -1,0 +1,23 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ArticleListSection from '../../components/ArticleListSection.astro';
+import { sortedPosts } from '../../utils/posts';
+
+export async function getStaticPaths({ paginate }) {
+  const all = sortedPosts(await getCollection('posts'));
+  return paginate(all, { pageSize: 8 });
+}
+
+const { page } = Astro.props;
+---
+
+<BaseLayout title="articles - voluxium的小站">
+  <ArticleListSection
+    posts={page.data}
+    page={page.currentPage}
+    totalPages={page.lastPage}
+    buildHref={(n) => (n === 1 ? '/posts' : `/posts/${n}`)}
+    heading="全部文章"
+  />
+</BaseLayout>

@@ -1,0 +1,75 @@
+/* ====== Layout shell ====== */
+.page {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 20px;
+  position: relative;
+  z-index: 20;
+}
+
+.layout-grid {
+  display: grid;
+  grid-template-columns: 260px minmax(0, 1fr) 260px;
+  gap: 28px;
+  align-items: start;
+  padding: 0 0 80px;
+  margin-top: -24px; /* banner 与三栏重叠 10%（240px 的 10%） */
+}
+
+@media (max-width: 1100px) {
+  .layout-grid {
+    grid-template-columns: 240px minmax(0, 1fr);
+  }
+  .layout-grid > .right-rail {
+    display: none;
+  }
+}
+
+@media (max-width: 720px) {
+  .layout-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* 窄屏：非 about 页隐藏左侧 profile 列（宽屏保持三列） */
+@media (max-width: 860px) {
+  .layout-grid.no-profile-narrow > .left-rail {
+    display: none;
+  }
+
+  .layout-grid.no-profile-narrow {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* ====== Islands (translucent rounded cards) ====== */
+.island {
+  background: var(--island-bg);
+  border: 1px solid var(--island-border);
+  border-radius: 18px;
+  box-shadow: var(--card-shadow);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  padding: 20px;
+}
+
+/* ====== Generic page content ====== */
+.page-content h1 {
+  font-size: 28px;
+  margin: 0 0 16px;
+}
+
+.page-content p {
+  color: var(--text-soft);
+  line-height: 1.7;
+  margin: 0.8em 0;
+  text-indent: 2em;
+}
+
+/* ====== Footer ====== */
+.footer {
+  text-align: center;
+  padding: 24px 0 40px;
+  font-size: 14px;
+  color: var(--muted);
+}

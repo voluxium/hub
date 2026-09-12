@@ -1,0 +1,21 @@
+---
+import ArticleCard from './ArticleCard.astro';
+import Pagination from './Pagination.astro';
+import type { Post } from '../utils/posts';
+
+interface Props {
+  posts: Post[];
+  page: number;
+  totalPages: number;
+  buildHref: (p: number) => string;
+  heading?: string;
+}
+
+const { posts, page, totalPages, buildHref, heading } = Astro.props;
+---
+
+{heading && <h2 class="list-heading">{heading}</h2>}
+<div class="article-list">
+  {posts.map((post) => <ArticleCard post={post} />)}
+</div>
+<Pagination page={page} totalPages={totalPages} buildHref={buildHref} />

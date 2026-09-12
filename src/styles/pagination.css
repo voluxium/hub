@@ -1,0 +1,39 @@
+/* ====== Pagination ====== */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  margin-top: 28px;
+}
+
+.pagination a,
+.pagination span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 36px;
+  height: 36px;
+  padding: 0 10px;
+  border-radius: 10px;
+  color: var(--text-soft);
+  font-size: 16px;
+  font-weight: bold;
+  background: var(--hover);
+}
+
+.pagination a:hover {
+  color: var(--text);
+  background: var(--accent-soft);
+}
+
+.pagination .current {
+  background: var(--accent);
+  color: #fff;
+  font-weight: 600;
+}
+
+.pagination .disabled {
+  opacity: 0.35;
+  pointer-events: none;
+}

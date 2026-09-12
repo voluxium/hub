@@ -1,0 +1,132 @@
+/* ====== Calendar widget ====== */
+.calendar {
+  font-size: 13px;
+}
+
+.calendar-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.calendar-title {
+  font-weight: 600;
+  color: var(--text);
+}
+
+.calendar-weekdays,
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+}
+
+.calendar-weekdays {
+  margin-bottom: 4px;
+}
+
+.calendar-weekdays span {
+  text-align: center;
+  font-size: 11px;
+  color: var(--muted);
+  padding: 4px 0;
+}
+
+.calendar-grid span {
+  text-align: center;
+  padding: 6px 0;
+  border-radius: 6px;
+  color: var(--text-soft);
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.calendar-grid span:hover {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.calendar-grid span.today {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.calendar-grid span.selected {
+  background: var(--accent);
+  color: #fff;
+  font-weight: 600;
+}
+
+.calendar-grid span.today.selected {
+  background: var(--accent);
+  color: #fff;
+}
+
+.calendar-grid span.other-month {
+  color: var(--muted);
+  opacity: 0.45;
+}
+
+.calendar-today-label {
+  display: block;
+  width: 100%;
+  margin-top: 12px;
+  padding: 7px 0;
+  text-align: center;
+  font-size: 12px;
+  color: var(--muted);
+  background: var(--hover);
+  border: 1px solid var(--island-border);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: color 0.18s ease, background 0.18s ease;
+}
+
+.calendar-today-label:hover {
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+
+/* ====== 日历月份/日期切换动画 ====== */
+@keyframes cal-slide-next {
+  from {
+    opacity: 0;
+    transform: translateX(26px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes cal-slide-prev {
+  from {
+    opacity: 0;
+    transform: translateX(-26px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.calendar-grid.cal-anim-next,
+.calendar-title.cal-anim-next {
+  animation: cal-slide-next 0.28s ease;
+}
+
+.calendar-grid.cal-anim-prev,
+.calendar-title.cal-anim-prev {
+  animation: cal-slide-prev 0.28s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .calendar-grid.cal-anim-next,
+  .calendar-grid.cal-anim-prev,
+  .calendar-title.cal-anim-next,
+  .calendar-title.cal-anim-prev {
+    animation: none;
+  }
+}

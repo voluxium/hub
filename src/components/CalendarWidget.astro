@@ -1,0 +1,40 @@
+---
+---
+
+<aside class="island calendar">
+  <div class="calendar-head">
+    <button type="button" class="cal-prev">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6" /></svg>
+    </button>
+    <div class="calendar-title" data-cal-title>—</div>
+    <button type="button" class="cal-next">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6" /></svg>
+    </button>
+  </div>
+  <div class="calendar-weekdays">
+    <span>日</span><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span>
+  </div>
+  <div class="calendar-grid" data-cal-grid></div>
+  <button type="button" class="calendar-today-label cal-today-btn" data-cal-today>今天</button>
+</aside>
+
+<style>
+  .cal-prev,
+  .cal-next {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    border: 1px solid var(--island-border);
+    border-radius: 8px;
+    background: var(--hover);
+    color: var(--text-soft);
+    cursor: pointer;
+    transition: color 0.18s ease, background 0.18s ease;
+  }
+  .cal-prev:hover,
+  .cal-next:hover {
+    color: var(--accent);
+  }
+</style>

@@ -8,7 +8,7 @@ interface Props {
 
 const { post } = Astro.props;
 const excerpt = postExcerpt(post);
-const cover = post.data.cover ?? '/covers/default-cover.svg';
+const cover = post.data.cover ?? `${import.meta.env.BASE_URL}covers/default-cover.svg`;
 ---
 
 <article class="island article-card">

@@ -1,9 +1,10 @@
 ---
+const B = import.meta.env.BASE_URL;
 ---
 
 <aside class="island profile">
   <div class="profile-avatar">
-    <img src="/avatar.png" alt="头像占位图" />
+    <img src={`${B}avatar.png`} alt="头像占位图" />
   </div>
   <h2 class="profile-name">Voluxium</h2>
   <p>voluxium@hotmail.com</p>

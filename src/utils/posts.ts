@@ -36,7 +36,7 @@ export function postSlug(post: Post): string {
 
 /** 文章 URL */
 export function postUrl(post: Post): string {
-  return `/post/${postSlug(post)}`;
+  return `${import.meta.env.BASE_URL}post/${postSlug(post)}`;
 }
 
 /**

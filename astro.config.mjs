@@ -12,5 +12,5 @@ export default defineConfig({
   },
 
   site:'https://voluxium.github.io',
-  base:'/hub'
+  base:'/hub/'
 });

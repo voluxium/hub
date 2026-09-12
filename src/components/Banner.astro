@@ -1,6 +1,7 @@
 ---
+const B = import.meta.env.BASE_URL;
 ---
 
 <div class="banner">
-  <img src="/banner.png" alt="website banner" />
+  <img src={`${B}banner.png`} alt="website banner" />
 </div>

@@ -107,6 +107,26 @@
   padding: 2px 0;
 }
 
+/* Images with caption */
+.prose figure {
+  margin: 1.4em 0;
+}
+
+.prose figure img {
+  display: block;
+  margin: 0 auto;
+  max-width: 100%;
+  border-radius: 10px;
+}
+
+.prose figcaption {
+  margin-top: 8px;
+  text-align: center;
+  font-size: 13px;
+  font-style: italic;
+  color: var(--muted);
+}
+
 .license {
   margin-top: 36px;
   padding: 14px 18px;

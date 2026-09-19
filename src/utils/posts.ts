@@ -3,9 +3,11 @@ import type { CollectionEntry } from 'astro:content';
 export type Post = CollectionEntry<'posts'>;
 
 /** 文章分类：路由 slug → 中文标签 */
+// 如果该这里要同时改src/components/nav.astro, pages/posts/category/
 export const CATEGORIES = {
   paper: '论文阅读',
   chat: '随便聊聊',
+  tech: '模型技术',
 } as const;
 
 export type CategorySlug = keyof typeof CATEGORIES;

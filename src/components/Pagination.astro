@@ -31,7 +31,7 @@ const items = pageRange(page, totalPages);
       <a
         href={page === 1 ? undefined : buildHref(page - 1)}
         class={page === 1 ? 'disabled' : ''}
-        aria-label="上一页"
+        aria-label="Previous Page"
       >
         &lt;
       </a>
@@ -51,10 +51,51 @@ const items = pageRange(page, totalPages);
       <a
         href={page === totalPages ? undefined : buildHref(page + 1)}
         class={page === totalPages ? 'disabled' : ''}
-        aria-label="下一页"
+        aria-label="Next Page"
       >
         &gt;
       </a>
     </nav>
   )
 }
+
+<style>
+  .pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    margin-top: 28px;
+  }
+
+  .pagination a,
+  .pagination span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 36px;
+    height: 36px;
+    padding: 0 10px;
+    border-radius: var(--border-radius);
+    color: var(--text-soft);
+    font-size: 16px;
+    font-weight: bold;
+    background: var(--hover);
+  }
+
+  .pagination a:hover {
+    color: var(--text);
+    background: var(--accent-soft);
+  }
+
+  .pagination .current {
+    background: var(--accent);
+    color: var(--accent-contrast);
+    font-weight: 600;
+  }
+
+  .pagination .disabled {
+    opacity: 0.35;
+    pointer-events: none;
+  }
+</style>

@@ -1,0 +1,39 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import ArticleListSection from '../../../components/ArticleListSection.astro';
+import { sortedPosts, CATEGORIES, type CategorySlug } from '../../../utils/posts';
+
+// 所有分类页共用此路由：/posts/category/<slug> 和 /posts/category/<slug>/<n>
+export async function getStaticPaths() {
+  const PAGE_SIZE = 8;
+  const all = sortedPosts(await getCollection('posts'));
+  return Object.entries(CATEGORIES).flatMap(([slug, label]) => {
+    const items = all.filter((p) => p.data.tags.includes(label));
+    const totalPages = Math.max(1, Math.ceil(items.length / PAGE_SIZE));
+    return Array.from({ length: totalPages }, (_, i) => ({
+      params: { rest: i === 0 ? slug : `${slug}/${i + 1}` },
+      props: {
+        slug: slug as CategorySlug,
+        label,
+        page: i + 1,
+        totalPages,
+        items: items.slice(i * PAGE_SIZE, (i + 1) * PAGE_SIZE),
+      },
+    }));
+  });
+}
+
+const { slug, label, page, totalPages, items } = Astro.props;
+---
+
+<BaseLayout title={`${label} - voluxium的小站`}>
+  <ArticleListSection
+    posts={items}
+    page={page}
+    totalPages={totalPages}
+    buildHref={(n) => (n === 1 ? `${import.meta.env.BASE_URL}posts/category/${slug}` : `${import.meta.env.BASE_URL}posts/category/${slug}/${n}`)}
+    heading={label}
+    categorySlug={slug}
+  />
+</BaseLayout>

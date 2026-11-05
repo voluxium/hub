@@ -1,52 +1,92 @@
-/* ====== Theme tokens ====== */
+/* ====== Semantic theme tokens ====== */
 :root {
-  --bg: #f4f5f7;
-  --bg-grad-1: #e9ecf2;
-  --bg-grad-2: #f7f8fa;
-  --text: #1f2328;
-  --text-soft: #5b6470;
-  --muted: #8a93a0;
-  --card-bg: rgba(255, 255, 255, 0.55);
-  --card-border: rgba(255, 255, 255, 0.7);
-  --card-shadow: 0 6px 28px rgba(40, 50, 70, 0.08);
-  --island-bg: rgba(255, 255, 255, 0.62);
-  /* --island-border: rgba(0, 0, 0, 0.50); */
-  --accent: #3a6df0;
-  --accent-soft: rgba(58, 109, 240, 0.12);
-  --tag-bg: rgba(58, 109, 240, 0.1);
-  --tag-text: #2a4fb0;
-  --code-bg: #0d1117;
-  --code-text: #e6edf3;
-  --divider: rgba(0, 0, 0, 0.08);
-  --hover: rgba(0, 0, 0, 0.04);
-  --nav-h: 54px; /* 导航高度：banner 负边距的单一事实来源 */
+  color-scheme: light;
+
+  /* Canvas */
+  --bg: #f5f7fb;
+  --bg-glow-primary: rgba(79, 70, 229, 0.1);
+  --bg-glow-secondary: rgba(13, 148, 136, 0.07);
+  --bg-glow-warm: rgba(236, 72, 153, 0.035);
+
+  /* Typography */
+  --text: #172033;
+  --text-soft: #475467;
+  --text-muted: #667085;
+  --text-secondary: var(--text-soft);
+
+  /* Surfaces */
+  --surface: #ffffff;
+  --surface-soft: #f0f3f9;
+  --surface-raised: #ffffff;
+  --card-bg: var(--island-bg);
+  --card-border: var(--island-border);
+  --card-shadow: 0 1px 2px rgba(15, 23, 42, 0.04),
+    0 14px 36px rgba(30, 41, 59, 0.07);
+  --island-bg: rgba(255, 255, 255, 0.8);
+  --island-border: rgba(15, 23, 42, 0.09);
+  --nav-bg: rgba(248, 250, 252, 0.82);
+  --nav-border: rgba(15, 23, 42, 0.08);
+
+  /* Accent */
+  --accent: #4f46e5;
+  --accent-strong: #4338ca;
+  --accent-contrast: #ffffff;
+  --accent-soft: rgba(79, 70, 229, 0.1);
+  --focus-ring: rgba(79, 70, 229, 0.38);
+
+  /* Tags */
+  --tag-bg: rgba(79, 70, 229, 0.09);
+  --tag-text: #4338ca;
+  --subtag-bg: rgba(13, 148, 136, 0.1);
+  --subtag-text: #0f766e;
+
+  /* Code and interaction */
+  --code-bg: #111827;
+  --code-text: #e5e7eb;
+  --divider: rgba(15, 23, 42, 0.09);
+  --hover: rgba(15, 23, 42, 0.05);
+
+  /* Shape */
+  --border-radius: 16px;
+  --inner-border-radius: 10px;
 }
 
 [data-theme="dark"] {
-  --bg: #0f1318;
-  --bg-grad-1: #0a0d12;
-  --bg-grad-2: #161b22;
-  --text: #e6edf3;
-  --text-soft: #aeb6c2;
-  --muted: #7d868f;
-  --card-bg: rgba(22, 27, 34, 0.55);
-  --card-border: rgba(255, 255, 255, 0.06);
-  --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
-  --island-bg: rgba(22, 27, 34, 0.62);
-  /* --island-border: rgba(255, 255, 255, 0.50); */
-  --accent: #6ea0ff;
-  --accent-soft: rgba(110, 160, 255, 0.16);
-  --tag-bg: rgba(110, 160, 255, 0.16);
-  --tag-text: #9cc0ff;
-  --code-bg: #05080d;
-  --code-text: #e6edf3;
-  --divider: rgba(255, 255, 255, 0.1);
-  --hover: rgba(255, 255, 255, 0.05);
-}
+  color-scheme: dark;
 
-/* 窄屏导航更矮，同步更新导航高度令牌 */
-@media (max-width: 860px) {
-  :root {
-    --nav-h: 48px;
-  }
+  --bg: #090e1a;
+  --bg-glow-primary: rgba(99, 102, 241, 0.2);
+  --bg-glow-secondary: rgba(45, 212, 191, 0.09);
+  --bg-glow-warm: rgba(244, 114, 182, 0.045);
+
+  --text: #edf2fb;
+  --text-soft: #b7c2d6;
+  --text-muted: #8c99b0;
+  --text-secondary: var(--text-soft);
+
+  --surface: #101827;
+  --surface-soft: #172033;
+  --surface-raised: #182235;
+  --card-shadow: 0 1px 0 rgba(255, 255, 255, 0.035) inset,
+    0 20px 48px rgba(0, 0, 0, 0.28);
+  --island-bg: rgba(16, 24, 39, 0.82);
+  --island-border: rgba(148, 163, 184, 0.16);
+  --nav-bg: rgba(9, 14, 26, 0.78);
+  --nav-border: rgba(148, 163, 184, 0.15);
+
+  --accent: #a5b4fc;
+  --accent-strong: #c7d2fe;
+  --accent-contrast: #111827;
+  --accent-soft: rgba(165, 180, 252, 0.14);
+  --focus-ring: rgba(165, 180, 252, 0.42);
+
+  --tag-bg: rgba(165, 180, 252, 0.12);
+  --tag-text: #c7d2fe;
+  --subtag-bg: rgba(45, 212, 191, 0.11);
+  --subtag-text: #99f6e4;
+
+  --code-bg: #070b14;
+  --code-text: #e2e8f0;
+  --divider: rgba(226, 232, 240, 0.1);
+  --hover: rgba(226, 232, 240, 0.06);
 }

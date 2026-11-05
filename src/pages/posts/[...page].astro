@@ -4,20 +4,30 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import ArticleListSection from '../../components/ArticleListSection.astro';
 import { sortedPosts } from '../../utils/posts';
 
-export async function getStaticPaths({ paginate }) {
+export async function getStaticPaths() {
+  const PAGE_SIZE = 8;
   const all = sortedPosts(await getCollection('posts'));
-  return paginate(all, { pageSize: 8 });
+  const totalPages = Math.max(1, Math.ceil(all.length / PAGE_SIZE));
+  return Array.from({ length: totalPages }, (_, i) => ({
+    params: { page: i === 0 ? undefined : String(i + 1) },
+    props: {
+      page: i + 1,
+      totalPages,
+      items: all.slice(i * PAGE_SIZE, (i + 1) * PAGE_SIZE),
+    },
+  }));
 }
 
-const { page } = Astro.props;
+const { page, totalPages, items } = Astro.props;
+const B = import.meta.env.BASE_URL;
 ---
 
 <BaseLayout title="articles - voluxium的小站">
   <ArticleListSection
-    posts={page.data}
-    page={page.currentPage}
-    totalPages={page.lastPage}
-    buildHref={(n) => (n === 1 ? `${import.meta.env.BASE_URL}posts` : `${import.meta.env.BASE_URL}posts/${n}`)}
+    posts={items}
+    page={page}
+    totalPages={totalPages}
+    buildHref={(n) => (n === 1 ? `${B}posts` : `${B}posts/${n}`)}
     heading="全部文章"
   />
 </BaseLayout>

@@ -1,9 +1,7 @@
 ---
 import Layout from './Layout.astro';
 import Nav from '../components/Nav.astro';
-import Banner from '../components/Banner.astro';
 import ProfileCard from '../components/ProfileCard.astro';
-import CalendarWidget from '../components/CalendarWidget.astro';
 
 interface Props {
   title?: string;
@@ -11,29 +9,133 @@ interface Props {
 }
 
 const { title, showProfile = false } = Astro.props;
+const hasRightRail = Astro.slots.has('right-rail');
 ---
 
 <Layout title={title}>
   <Nav />
-  <div class="banner-outer">
-    <Banner />
-  </div>
   <div class="page">
-    <div class={`layout-grid${showProfile ? '' : ' no-profile-narrow'}`}>
+    <div class={`layout-grid${showProfile ? '' : ' no-profile-narrow'}${hasRightRail ? ' with-right-rail' : ' two-col'}`}>
       <div class="left-rail">
         <ProfileCard />
       </div>
       <main class="main-col">
         <slot />
       </main>
-      <div class="right-rail">
-        <slot name="right-rail">
-          <CalendarWidget />
-        </slot>
-      </div>
+      {hasRightRail && (
+        <div class="right-rail">
+          <slot name="right-rail" />
+        </div>
+      )}
     </div>
     <footer class="footer">
       © {new Date().getFullYear()} 内容遵循 CC-BY-NC-SA 4.0 | github pages 部署
     </footer>
   </div>
 </Layout>
+
+<style>
+  .page {
+    max-width: 1280px;
+    margin: 20px auto;
+    padding: 0 20px;
+    position: relative;
+    z-index: 20;
+  }
+
+  .layout-grid {
+    display: grid;
+    grid-template-columns: 260px minmax(0, 1fr);
+    gap: 28px;
+    align-items: start;
+    padding: 0 0 80px;
+  }
+
+  /* 文章页等需要右栏时回到三栏 */
+  .layout-grid.with-right-rail {
+    grid-template-columns: 260px minmax(0, 1fr) 260px;
+  }
+
+  /* 右栏撑满整行高度，内部 .toc 的 position: sticky 跟随滚动 */
+  .layout-grid > .right-rail {
+    align-self: stretch;
+  }
+
+  @media (max-width: 1100px) {
+    .layout-grid.with-right-rail {
+      grid-template-columns: 240px minmax(0, 1fr);
+    }
+    .layout-grid.with-right-rail > .right-rail {
+      display: none;
+    }
+  }
+
+  @media (max-width: 720px) {
+    .layout-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* 窄屏：非 about 页隐藏左侧 profile 列（宽屏保持三列） */
+  @media (max-width: 860px) {
+    .layout-grid.no-profile-narrow > .left-rail {
+      display: none;
+    }
+
+    .layout-grid.no-profile-narrow {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  .footer {
+    text-align: center;
+    padding: 24px 0 40px;
+    font-size: 14px;
+    color: var(--text-muted);
+  }
+
+  /* ====== 客户端导航后模块浮现动画 ====== */
+  @keyframes module-float-in {
+    from {
+      opacity: 0;
+      transform: translateY(18px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* 客户端导航后新 DOM 自动重播：左栏 → 正文 → 右栏 → 页脚，依次浮现 */
+  .left-rail,
+  .main-col,
+  .right-rail,
+  .footer {
+    animation: module-float-in 0.45s ease both;
+  }
+
+  .left-rail {
+    animation-delay: 0.06s;
+  }
+
+  .main-col {
+    animation-delay: 0.12s;
+  }
+
+  .right-rail {
+    animation-delay: 0.18s;
+  }
+
+  .footer {
+    animation-delay: 0.24s;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .left-rail,
+    .main-col,
+    .right-rail,
+    .footer {
+      animation: none;
+    }
+  }
+</style>

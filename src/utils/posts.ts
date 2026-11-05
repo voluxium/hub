@@ -3,14 +3,28 @@ import type { CollectionEntry } from 'astro:content';
 export type Post = CollectionEntry<'posts'>;
 
 /** 文章分类：路由 slug → 中文标签 */
-// 如果该这里要同时改src/components/nav.astro, pages/posts/category/
 export const CATEGORIES = {
-  paper: '论文阅读',
-  chat: '随便聊聊',
-  tech: '模型技术',
+  paper: 'Paper Reading',
+  chat: 'Random Chat',
+  tech: 'Model Technology',
 } as const;
 
 export type CategorySlug = keyof typeof CATEGORIES;
+
+/** 文章所在目录名 → 分类 slug */
+const DIR_TO_SLUG: Record<string, CategorySlug> = {
+  paper_reading: 'paper',
+  random_chat: 'chat',
+  model_tech: 'tech',
+};
+
+/** 文章的分类 slug，由其所在目录推断 */
+export function categoryOf(post: Post): CategorySlug {
+  const dir = post.id.split('/').slice(0, -1).join('/');
+  const slug = DIR_TO_SLUG[dir];
+  if (!slug) throw new Error(`未知分类目录：${dir}（post id=${post.id}）`);
+  return slug;
+}
 
 /** 按日期降序排序的文章列表 */
 export function sortedPosts(posts: Post[]): Post[] {
@@ -27,18 +41,15 @@ export function fmtDate(d: Date): string {
   return `${y}-${m}-${day}`;
 }
 
-/** 文章 URL slug：YYMMDD 六位数 */
+/** 文章 URL slug：使用文件名（忽略分类子目录，保证是单段路径） */
 export function postSlug(post: Post): string {
-  const d = post.data.date;
-  const yy = String(d.getFullYear()).slice(-2);
-  const mm = String(d.getMonth() + 1).padStart(2, '0');
-  const dd = String(d.getDate()).padStart(2, '0');
-  return `${yy}${mm}${dd}`;
+  return post.id.split('/').pop()!;
 }
 
-/** 文章 URL */
+/** 文章 URL，可附带分类 query param 以支持分类内上下篇切换 */
 export function postUrl(post: Post): string {
-  return `${import.meta.env.BASE_URL}post/${postSlug(post)}`;
+  const base = `${import.meta.env.BASE_URL}post/${postSlug(post)}`;
+  return base;
 }
 
 /**

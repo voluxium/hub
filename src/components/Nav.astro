@@ -1,5 +1,6 @@
 ---
 import ThemeToggle from './ThemeToggle.astro';
+import { CATEGORIES } from '../utils/posts';
 const B = import.meta.env.BASE_URL;
 ---
 
@@ -21,9 +22,9 @@ const B = import.meta.env.BASE_URL;
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6" /></svg>
       </a>
       <div class="nav-dropdown">
-        <a href={`${B}posts/category/paper`}>Paper Reading</a>
-        <a href={`${B}posts/category/chat`}>Random Chat</a>
-        <a href={`${B}posts/category/tech`}>Model Tech</a>
+        {Object.entries(CATEGORIES).map(([slug, label]) => (
+          <a href={`${B}posts/category/${slug}`}>{label}</a>
+        ))}
       </div>
     </div>
     <div class="nav-item">
@@ -35,3 +36,158 @@ const B = import.meta.env.BASE_URL;
     <ThemeToggle />
   </div>
 </nav>
+
+<style>
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 60;
+    max-width: 60%;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding: 6px 16px;
+    background: var(--nav-bg);
+    border: 1px solid var(--nav-border);
+    border-top: 0;
+    border-radius: 0 0 var(--border-radius) var(--border-radius);
+    box-shadow: var(--card-shadow);
+    -webkit-backdrop-filter: blur(20px) saturate(150%);
+    backdrop-filter: blur(20px) saturate(150%);
+    transition: transform 0.3s ease, background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .nav.nav-hidden {
+    transform: translateY(-100%);
+  }
+
+  .nav-home {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: var(--inner-border-radius);
+    color: var(--text);
+    transition: background 0.2s ease;
+  }
+
+  .nav-home:hover {
+    background: var(--hover);
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 0 auto;
+  }
+
+  .nav-item {
+    position: relative;
+  }
+
+  .nav-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    border-radius: var(--inner-border-radius);
+    color: var(--text-soft);
+    font-size: 18px;
+    font-weight: bolder;
+    transition: background 0.2s ease, color 0.2s ease;
+    cursor: pointer;
+  }
+
+  .nav-link:hover,
+  .nav-item:hover .nav-link {
+    background: var(--hover);
+    color: var(--text);
+  }
+
+  .nav-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    min-width: 160px;
+    padding: 10px;
+    margin-top: 10px;
+    background: var(--surface-raised);
+    border: 1px solid var(--island-border);
+    border-radius: var(--inner-border-radius);
+    box-shadow: var(--card-shadow);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.18s ease, visibility 0.18s ease;
+  }
+
+  /* 悬停桥梁：向上延伸 14px 的隐形热区，鼠标下移到下拉列表时不会丢失 hover */
+  .nav-dropdown::before {
+    content: "";
+    position: absolute;
+    top: -14px;
+    left: 0;
+    right: 0;
+    height: 14px;
+  }
+
+  .nav-item:hover .nav-dropdown {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+
+  .nav-dropdown a {
+    display: block;
+    padding: 8px 12px;
+    border-radius: var(--inner-border-radius);
+    color: var(--text-soft);
+    font-size: 16px;
+    font-weight: bold;
+    white-space: nowrap;
+  }
+
+  .nav-dropdown a:hover {
+    background: var(--hover);
+    color: var(--text);
+  }
+
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* ====== 窄屏：背景板跟随内容，条目压缩 ====== */
+  @media (max-width: 860px) {
+    .nav {
+      width: fit-content;
+      max-width: 100%;
+      gap: 12px;
+      padding: 6px 12px;
+    }
+
+    .nav-links {
+      gap: 4px;
+    }
+
+    .nav-link {
+      font-size: 14px;
+      padding: 6px 10px;
+    }
+
+    .nav-link svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    .nav-home {
+      width: 34px;
+      height: 34px;
+    }
+  }
+</style>

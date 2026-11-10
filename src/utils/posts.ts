@@ -41,9 +41,11 @@ export function fmtDate(d: Date): string {
   return `${y}-${m}-${day}`;
 }
 
-/** 文章 URL slug：使用文件名（忽略分类子目录，保证是单段路径） */
+/** 文章 URL slug：分类 slug + 文件名，避免跨目录同名文件冲突 */
 export function postSlug(post: Post): string {
-  return post.id.split('/').pop()!;
+  const cat = categoryOf(post);
+  const filename = post.id.split('/').pop()!;
+  return `${cat}/${filename}`;
 }
 
 /** 文章 URL，可附带分类 query param 以支持分类内上下篇切换 */
